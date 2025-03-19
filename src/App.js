@@ -24,7 +24,12 @@ export default function App() {
       <input
         type="text"
         value={amount}
-        onChange={(e) => setAmount(Number(e.target.value))}
+        onChange={(e) => {
+          let value = e.target.value;
+          if (/^\d*$/.test(value)) {
+            setAmount(value);
+          }
+        }}
       />
       <select value={base} onChange={(e) => setBase(e.target.value)}>
         <option value="USD">USD</option>
