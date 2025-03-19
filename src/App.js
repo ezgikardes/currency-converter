@@ -4,19 +4,23 @@ import { useEffect, useState } from "react";
 
 export default function App() {
   const [amount, setAmount] = useState(1);
-  const [output, setOutput] = useState(0);
-  const [base, setBase] = useState("EUR");
-  const [target, setTarget] = useState("USD");
+  const [baseCur, setBaseCur] = useState("EUR");
+  const [targetCur, setTargetCur] = useState("USD");
+  const [converted, setConverted] = useState("");
 
   useEffect(
     function () {
-      fetch(
-        `https://api.frankfurter.app/latest?amount=100&from=${base}&to=${target}`
-      )
-        .then((res) => res.json())
-        .then((data) => setOutput(amount * data.rates[target]));
+      async function convert() {
+        const res = await fetch(
+          `https://api.frankfurter.app/latest?amount=${amount}&from=${baseCur}&to=${targetCur}`
+        );
+        const data = await res.json();
+
+        setConverted(data.rates[targetCur]);
+      }
+      convert();
     },
-    [amount, base, target]
+    [amount, baseCur, targetCur]
   );
 
   return (
@@ -31,19 +35,21 @@ export default function App() {
           }
         }}
       />
-      <select value={base} onChange={(e) => setBase(e.target.value)}>
+      <select value={baseCur} onChange={(e) => setBaseCur(e.target.value)}>
         <option value="USD">USD</option>
         <option value="EUR">EUR</option>
         <option value="CAD">CAD</option>
         <option value="INR">INR</option>
       </select>
-      <select value={target} onChange={(e) => setTarget(e.target.value)}>
+      <select value={targetCur} onChange={(e) => setTargetCur(e.target.value)}>
         <option value="USD">USD</option>
         <option value="EUR">EUR</option>
         <option value="CAD">CAD</option>
         <option value="INR">INR</option>
       </select>
-      <p>{output}</p>
+      <p>
+        {converted} {targetCur}
+      </p>
     </div>
   );
 }
