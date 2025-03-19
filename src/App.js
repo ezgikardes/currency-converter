@@ -19,6 +19,8 @@ export default function App() {
         setConverted(data.rates[targetCur]);
         setIsLoading(false);
       }
+
+      if (baseCur === targetCur) return setConverted(amount);
       convert();
     },
     [amount, baseCur, targetCur]
