@@ -24,7 +24,7 @@ export default function App() {
       <input
         type="text"
         value={amount}
-        onChange={(e) => setAmount(e.target.value)}
+        onChange={(e) => setAmount(Number(e.target.value))}
       />
       <select value={base} onChange={(e) => setBase(e.target.value)}>
         <option value="USD">USD</option>
