@@ -9,9 +9,15 @@ export default function App() {
   const [converted, setConverted] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(
-    function () {
+  useEffect(() => {
+    const timer = setTimeout(() => {
       async function convert() {
+        if (amount === "0") {
+          setConverted("0");
+          return;
+        }
+
+        setIsLoading(true);
         const res = await fetch(
           `https://api.frankfurter.app/latest?amount=${amount}&from=${baseCur}&to=${targetCur}`
         );
@@ -22,9 +28,10 @@ export default function App() {
 
       if (baseCur === targetCur) return setConverted(amount);
       convert();
-    },
-    [amount, baseCur, targetCur]
-  );
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [amount, baseCur, targetCur]);
 
   return (
     <div>
@@ -34,7 +41,7 @@ export default function App() {
         onChange={(e) => {
           let value = e.target.value;
           if (/^\d*$/.test(value)) {
-            setAmount(value);
+            setAmount(value === "" ? "0" : String(Number(value)));
           }
         }}
         disabled={isLoading}
