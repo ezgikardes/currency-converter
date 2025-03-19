@@ -7,6 +7,7 @@ export default function App() {
   const [baseCur, setBaseCur] = useState("EUR");
   const [targetCur, setTargetCur] = useState("USD");
   const [converted, setConverted] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(
     function () {
@@ -15,8 +16,8 @@ export default function App() {
           `https://api.frankfurter.app/latest?amount=${amount}&from=${baseCur}&to=${targetCur}`
         );
         const data = await res.json();
-
         setConverted(data.rates[targetCur]);
+        setIsLoading(false);
       }
       convert();
     },
@@ -34,14 +35,21 @@ export default function App() {
             setAmount(value);
           }
         }}
+        disabled={isLoading}
       />
-      <select value={baseCur} onChange={(e) => setBaseCur(e.target.value)}>
+      <select
+        value={baseCur}
+        onChange={(e) => setBaseCur(e.target.value)}
+        disabled={isLoading}>
         <option value="USD">USD</option>
         <option value="EUR">EUR</option>
         <option value="CAD">CAD</option>
         <option value="INR">INR</option>
       </select>
-      <select value={targetCur} onChange={(e) => setTargetCur(e.target.value)}>
+      <select
+        value={targetCur}
+        onChange={(e) => setTargetCur(e.target.value)}
+        disabled={isLoading}>
         <option value="USD">USD</option>
         <option value="EUR">EUR</option>
         <option value="CAD">CAD</option>
